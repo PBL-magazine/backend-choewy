@@ -3,10 +3,10 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Users extends Model {
     static associate(models) {}
   }
-  User.init(
+  Users.init(
     {
       user_id: {
         primaryKey: true,
@@ -14,16 +14,21 @@ module.exports = (sequelize, DataTypes) => {
       },
       email: DataTypes.STRING,
       nickname: DataTypes.STRING,
-      image_url: DataTypes.STRING,
       password: DataTypes.STRING,
+      role: {
+        type: DataTypes.INTEGER,
+        defaultValue: 0,
+      },
     },
     {
       sequelize,
-      timestamps: true,
-      paranoid: true,
+      modelName: 'Users',
+      tableName: 'users',
+      underscored: true,
+      timestamps: false,
       charset: 'utf8',
       collate: 'utf8_general_ci',
     },
   );
-  return User;
+  return Users;
 };

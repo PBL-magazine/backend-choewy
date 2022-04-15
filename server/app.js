@@ -2,6 +2,7 @@
 
 require('dotenv').config();
 const express = require('express');
+const db = require('./models');
 
 const middlewares = [
   express.json(),
@@ -32,9 +33,16 @@ class App {
   }
 
   listen() {
-    const port = 5000;
-    const log = `Server Running on port ${port}`;
-    this.app.listen(port, () => console.log(log));
+    db.sequelize
+      .sync()
+      .then(() => {
+        const port = 5000;
+        const log = `Server Running on port ${port}`;
+        this.app.listen(port, () => console.log(log));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 }
 

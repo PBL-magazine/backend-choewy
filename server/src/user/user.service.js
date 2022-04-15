@@ -1,14 +1,14 @@
 'use strict';
 
 const { Op } = require('sequelize');
-const { User } = require('../../models');
+const { Users } = require('../../models');
 const UserUtils = require('./user.utils');
 
 const UserService = {
   signupUser: async (userDto) => {
     const { email, nickname, password } = userDto;
 
-    const existUser = await User.findOne({
+    const existUser = await Users.findOne({
       where: {
         [Op.or]: [{ email, nickname }],
       },
@@ -23,14 +23,15 @@ const UserService = {
       };
 
     const hashed = UserUtils.HashPassword(password);
-    await User.create({ email, nickname, password: hashed });
+    await Users.create({ email, nickname, password: hashed });
+
     return { email, nickname };
   },
 
   signinUser: async (userDto) => {
     const { email, password } = userDto;
 
-    const user = await User.findOne({
+    const user = await Users.findOne({
       where: {
         [Op.or]: [{ email }],
       },
@@ -58,7 +59,7 @@ const UserService = {
   findUserByPayload: async (payload) => {
     const { email, nickname } = payload;
 
-    const user = await User.findOne({
+    const user = await Users.findOne({
       where: {
         [Op.or]: [{ email, nickname }],
       },

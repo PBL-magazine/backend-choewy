@@ -3,7 +3,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secret = process.env.JWT_SECRET;
-const rounds = process.env.ROUNDS;
+const rounds = Number(process.env.ROUNDS) || 10;
 
 const UserUtils = {
   HashPassword(password) {
