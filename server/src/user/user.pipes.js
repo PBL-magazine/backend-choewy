@@ -4,7 +4,7 @@ const UserService = require('./user.service');
 const UserUtils = require('./user.utils');
 
 const UserPipes = {
-  async UserAuthorization(req, res, next) {
+  async Authorization(req, res, next) {
     const { authorization } = req.headers;
 
     const payload = UserUtils.Authorization(authorization);

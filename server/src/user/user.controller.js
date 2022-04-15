@@ -45,7 +45,7 @@ const UserController = () => {
     },
   );
 
-  router.get('/auth', UserPipes.UserAuthorization, (req, res) => {
+  router.get('/auth', UserPipes.Authorization, (req, res) => {
     const data = {
       ok: true,
       user: {
