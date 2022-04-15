@@ -4,7 +4,7 @@ const { Router } = require('express');
 const UserPipes = require('../user/user.pipes');
 const PostValidation = require('./post.validation');
 const multer = require('multer');
-const upload = multer({ dest: '../upload' });
+const Upload = multer({ dest: '../upload' });
 
 const PostController = () => {
   const prefix = '/api/posts';
@@ -23,7 +23,7 @@ const PostController = () => {
     '/',
     UserPipes.Authorization,
     PostValidation.Content,
-    upload.single('image'),
+    Upload.single('image'),
     PostValidation.Image,
     async (req, res) => {
       const { file } = req;
