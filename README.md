@@ -14,9 +14,9 @@ USE magazine;
 ```sql
 CREATE TABLE users (
 	user_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-	email VARCHAR(50),
-	nickname VARCHAR(20),
-	password VARCHAR(100),
+	email VARCHAR(50) NOT NULL,
+	nickname VARCHAR(20) NOT NULL,
+	password VARCHAR(100) NOT NULL,
 	created_at TIMESTAMP DEFAULT NOW(),
 	updated_at TIMESTAMP DEFAULT NOW(),
 	deleted_at TIMESTAMP DEFAULT NULL
@@ -29,7 +29,7 @@ CREATE TABLE users (
 CREATE TABLE posts (
 	post_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	user_id INT NOT NULL,
-	content text,
+	content text NOT NULL,
 	image VARCHAR(255),
 	created_at TIMESTAMP DEFAULT NOW(),
 	updated_at TIMESTAMP DEFAULT NOW(),
@@ -56,7 +56,7 @@ CREATE TABLE post_comments (
 	comment_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	post_id INT NOT NULL,
 	user_id INT NOT NULL,
-	content TEXT,
+	content TEXT NOT NULL,
 	created_at TIMESTAMP DEFAULT NOW(),
 	updated_at TIMESTAMP DEFAULT NOW(),
 	deleted_at TIMESTAMP DEFAULT NULL,
