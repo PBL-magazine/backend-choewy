@@ -1,0 +1,53 @@
+{
+  "method": "patch",
+  "uri": "/api/posts/:post_id",
+  "request": {
+    "headers": {
+      "authorization": "Bearer Token",
+      "content-type": "multipart/form-data"
+    },
+    "body": {
+      "content": "String",
+      "image": "FileData"
+    }
+  },
+  "response": {
+    "success": {
+      "status": ["201 No Content", "304 Not Modified"],
+      "data": { "ok": true }
+    },
+    "errors": [
+      {
+        "status": "401 Unauthorized",
+        "data": {
+          "ok": false,
+          "message": "로그인 상태가 아닙니다."
+        }
+      },
+      {
+        "status": "404 Not Found",
+        "data": {
+          "ok": false,
+          "message": "해당 게시물 정보를 찾을 수 없습니다."
+        }
+      },
+      {
+        "status": "400 Bad Request",
+        "data": {
+          "ok": false,
+          "message": "내용을 입력하세요."
+        }
+      },
+      {
+        "status": "400 Bad Request",
+        "data": {
+          "ok": false,
+          "message": "이미지를 입력하세요."
+        }
+      },
+      {
+        "status": "500 Internal Server Error"
+      }
+    ]
+  }
+}

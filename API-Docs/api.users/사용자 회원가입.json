@@ -1,0 +1,53 @@
+{
+  "method": "post",
+  "uri": "/api/user/signup",
+  "request": {
+    "body": {
+      "email": "String",
+      "nickname": "String",
+      "password": "String"
+    }
+  },
+  "response": {
+    "success": {
+      "status": "201 Created",
+      "headers": {
+        "cookies": { "token": "String" }
+      },
+      "data": { "ok": true }
+    },
+    "errors": [
+      {
+        "status": "400 Bad Request",
+        "data": {
+          "ok": false,
+          "message": "이메일 형식을 확인하세요."
+        }
+      },
+      {
+        "status": "400 Bad Request",
+        "data": {
+          "ok": false,
+          "message": "닉네임 형식을 확인하세요."
+        }
+      },
+      {
+        "status": "400 Bad Request",
+        "data": {
+          "ok": false,
+          "message": "비밀번호 형식을 확인하세요."
+        }
+      },
+      {
+        "status": "409 Conflict",
+        "data": {
+          "ok": false,
+          "message": "이미 존재하는 이메일 계정입니다."
+        }
+      },
+      {
+        "status": "500 Internal Server Error"
+      }
+    ]
+  }
+}

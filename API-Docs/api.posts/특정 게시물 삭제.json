@@ -1,0 +1,34 @@
+{
+  "method": "delete",
+  "uri": "/api/posts/:post_id",
+  "request": {
+    "headers": {
+      "authorization": "Bearer Token"
+    }
+  },
+  "response": {
+    "success": {
+      "status": ["204 No Content", "304 Not Modified"],
+      "data": { "ok": true }
+    },
+    "errors": [
+      {
+        "status": "401 Unauthorized",
+        "data": {
+          "ok": false,
+          "message": "로그인 상태가 아닙니다."
+        }
+      },
+      {
+        "status": "404 Not Found",
+        "data": {
+          "ok": false,
+          "message": "해당 게시물 정보를 찾을 수 없습니다."
+        }
+      },
+      {
+        "status": "500 Internal Server Error"
+      }
+    ]
+  }
+}
