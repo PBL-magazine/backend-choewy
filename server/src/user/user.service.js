@@ -1,37 +1,49 @@
 'use strict';
 
 const { Op } = require('sequelize');
-const { Users } = require('../../models');
+const User = require('./user.model');
 const UserUtils = require('./user.utils');
 
 const UserService = {
   signupUser: async (userDto) => {
     const { email, nickname, password } = userDto;
 
-    const existUser = await Users.findOne({
+    const existUser = await User.findOne({
       where: {
         [Op.or]: [{ email, nickname }],
       },
     });
 
-    if (existUser)
+    if (existUser) {
       throw {
         code: 409,
         data: {
+          ok: false,
           message: '이미 존재하는 이메일 계정입니다.',
         },
       };
+    }
 
     const hashed = UserUtils.HashPassword(password);
-    await Users.create({ email, nickname, password: hashed });
 
-    return { email, nickname };
+    try {
+      await User.create({ email, nickname, password: hashed });
+      return { email, nickname };
+    } catch (error) {
+      throw {
+        code: 500,
+        data: {
+          ok: false,
+          message: error.parent.sqlMessage,
+        },
+      };
+    }
   },
 
   signinUser: async (userDto) => {
     const { email, password } = userDto;
 
-    const user = await Users.findOne({
+    const user = await User.findOne({
       where: {
         [Op.or]: [{ email }],
       },
@@ -41,6 +53,7 @@ const UserService = {
       throw {
         code: 404,
         data: {
+          ok: false,
           message: '존재하지 않는 계정입니다.',
         },
       };
@@ -50,6 +63,7 @@ const UserService = {
       throw {
         code: 400,
         data: {
+          ok: false,
           message: '이메일 또는 비밀번호를 확인하세요.',
         },
       };
@@ -59,7 +73,7 @@ const UserService = {
   findUserByPayload: async (payload) => {
     const { email, nickname } = payload;
 
-    const user = await Users.findOne({
+    const user = await User.findOne({
       where: {
         [Op.or]: [{ email, nickname }],
       },
@@ -69,6 +83,7 @@ const UserService = {
       throw {
         code: 404,
         data: {
+          ok: false,
           message: '사용자 정보를 찾을 수 없습니다.',
         },
       };

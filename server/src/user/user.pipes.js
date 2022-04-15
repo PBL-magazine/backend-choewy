@@ -11,13 +11,18 @@ const UserPipes = {
 
     if ([0, 1, 2].includes(payload)) {
       res.cookie('token', undefined);
-      return res.status(402).send({ message: '로그인이 필요합니다.' });
+      return res.status(402).send({
+        ok: false,
+        message: '로그인이 필요합니다.',
+      });
     }
 
     try {
       const user = await UserService.findUserByPayload(payload);
       req.user = user;
-      req.token = UserUtils.GenerateToken(payload);
+      // 토큰 재발급
+      // req.token = UserUtils.GenerateToken(payload);
+      req.token = authorization.split(' ')[1];
       next();
     } catch (error) {
       const { code, data } = error;

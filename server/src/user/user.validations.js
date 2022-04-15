@@ -3,19 +3,18 @@
 const regularExp = {
   email:
     /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i,
-  nickname: /^[a-z]+[a-z0-9]{2,19}$/g,
+  nickname: /^[a-z0-9]{3,20}$/g,
 };
 
 const UserValidation = {
   Email: (req, res, next) => {
     const { email } = req.body;
 
-    if (!email) {
-      return res.status(400).send({ message: '이메일을 입력하세요.' });
-    }
-
-    if (!regularExp.email.test(email)) {
-      return res.status(400).send({ message: '이메일 형식에 맞지 않습니다.' });
+    if (!email || !regularExp.email.test(email)) {
+      return res.status(400).send({
+        ok: false,
+        message: '이메일 형식에 맞지 않습니다.',
+      });
     }
 
     next();
@@ -23,12 +22,13 @@ const UserValidation = {
   Nickname: (req, res, next) => {
     const { nickname } = req.body;
 
-    if (!nickname) {
-      return res.status(400).send({ message: '닉네임을 입력하세요.' });
-    }
-
-    if (!regularExp.nickname.test(nickname)) {
-      return res.status(400).send({ message: '닉네임 형식에 맞지 않습니다.' });
+    // TODO : 여러 번 같은 정보로 요청하면 정규표현식에는 맞게 나오는데
+    // 여기서 응답 처리됨. 왜지?
+    if (!nickname || !regularExp.nickname.test(nickname)) {
+      return res.status(400).send({
+        ok: false,
+        message: '닉네임 형식에 맞지 않습니다.',
+      });
     }
 
     next();
@@ -37,23 +37,24 @@ const UserValidation = {
     const { nickname, password, confirmPassword } = req.body;
 
     if (!password) {
-      return res.status(400).send({ message: '비밀번호를 입력하세요.' });
+      return res.status(400).send({
+        ok: false,
+        message: '비밀번호를 입력하세요.',
+      });
     }
 
-    if (password.length < 4) {
-      return res
-        .status(400)
-        .send({ message: '비밀번호 형식에 맞지 않습니다.' });
-    }
-
-    if (password.includes(nickname)) {
-      return res
-        .status(400)
-        .send({ message: '비밀번호 형식에 맞지 않습니다.' });
+    if (password.length < 4 || password.includes(nickname)) {
+      return res.status(400).send({
+        ok: false,
+        message: '비밀번호 형식에 맞지 않습니다.',
+      });
     }
 
     if (confirmPassword & (!password !== confirmPassword)) {
-      return res.status(400).send({ message: '비밀번호가 같지 않습니다.' });
+      return res.status(400).send({
+        ok: false,
+        message: '비밀번호가 같지 않습니다.',
+      });
     }
 
     next();

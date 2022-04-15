@@ -1,16 +1,21 @@
 'use strict';
 
 require('dotenv').config();
+
 const express = require('express');
-const db = require('./models');
+const DB = require('./src/sequelize');
 
 const middlewares = [
   express.json(),
   express.urlencoded({ extended: true }),
+  express.static('../upload'),
   require('cors')(),
 ];
 
-const controllers = [require('./src/user/user.controller')];
+const controllers = [
+  require('./src/user/user.controller'),
+  require('./src/post/post.controller'),
+];
 
 class App {
   constructor() {
@@ -33,8 +38,10 @@ class App {
   }
 
   listen() {
+    const env = process.env.NODE_ENV || 'development';
+    const db = DB(env);
     db.sequelize
-      .sync()
+      .sync() // { force: true }
       .then(() => {
         const port = 5000;
         const log = `Server Running on port ${port}`;
