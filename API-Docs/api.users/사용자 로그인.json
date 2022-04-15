@@ -31,6 +31,13 @@
         }
       },
       {
+        "status": "404 Not Found",
+        "data": {
+          "ok": false,
+          "message": "존재하지 않는 이메일 계정입니다."
+        }
+      },
+      {
         "status": "401 Unauthorized",
         "data": {
           "ok": false,
