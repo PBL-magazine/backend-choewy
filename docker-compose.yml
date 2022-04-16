@@ -17,7 +17,7 @@ services:
     networks:
       - magazine
 
-  app:
+  server:
     depends_on:
       - mysql
     build: ./server/
