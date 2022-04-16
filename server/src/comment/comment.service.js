@@ -62,7 +62,7 @@ const CommentService = {
   },
   deleteComment: async (user_id, post_id, comment_id) => {
     try {
-      await Comment.v({
+      await Comment.destroy({
         where: {
           user_id,
           post_id,
