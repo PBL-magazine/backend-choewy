@@ -1,7 +1,7 @@
 'use strict';
 
 const { Op } = require('sequelize');
-const User = require('./user.model');
+const { User } = require('../models');
 const UserUtils = require('./user.utils');
 
 const UserService = {
@@ -61,7 +61,7 @@ const UserService = {
     const valid = UserUtils.ComparePassword(password, user);
     if (!valid)
       throw {
-        code: 400,
+        code: 401,
         data: {
           ok: false,
           message: '이메일 또는 비밀번호를 확인하세요.',

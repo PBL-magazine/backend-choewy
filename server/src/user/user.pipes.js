@@ -6,12 +6,11 @@ const UserUtils = require('./user.utils');
 const UserPipes = {
   async Authorization(req, res, next) {
     const { authorization } = req.headers;
-
     const payload = UserUtils.Authorization(authorization);
 
     if ([0, 1, 2].includes(payload)) {
       res.cookie('token', undefined);
-      return res.status(402).send({
+      return res.status(401).send({
         ok: false,
         message: '로그인이 필요합니다.',
       });
