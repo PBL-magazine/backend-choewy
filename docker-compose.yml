@@ -1,0 +1,33 @@
+version: '3.7'
+
+services:
+  mysql:
+    build: ./mysql/
+    cap_add:
+      - SYS_NICE
+    command: --authentication_policy=mysql_native_password
+    restart: always
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/sqls:/docker-entrypoint-initdb.d
+    ports:
+      - 5001:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    networks:
+      - magazine
+
+  app:
+    depends_on:
+      - mysql
+    build: ./server/
+    restart: always
+    ports:
+      - 80:5000
+    networks:
+      - magazine
+
+# sudo docker network create --driver=bridge magazine
+networks:
+  magazine:
+    driver: bridge
