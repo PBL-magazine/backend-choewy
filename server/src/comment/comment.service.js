@@ -21,6 +21,7 @@ const CommentService = {
     }
   },
   getComment: async (post_id, comment_id) => {
+    console.log(post_id, comment_id);
     try {
       return await Comment.findOne({
         where: { post_id, comment_id },

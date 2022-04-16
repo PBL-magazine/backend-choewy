@@ -1,6 +1,7 @@
 'use strict';
 
 const { Router } = require('express');
+const CustomErrors = require('../../commons/CustomErrors');
 const UserPipes = require('./user.pipes');
 const UserService = require('./user.service');
 const UserUtils = require('./user.utils');

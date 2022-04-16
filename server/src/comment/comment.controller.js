@@ -1,21 +1,22 @@
 'use strict';
 
+// 서브쿼리로 해결하는 방법도 있음
+
 const { Router } = require('express');
 const CustomErrors = require('../../commons/CustomErrors');
 const UserPipes = require('../user/user.pipes');
 const PostPipes = require('../post/post.pipes');
 const CommentService = require('./comment.service');
 const CommentPipes = require('./comment.pipes');
-const UserService = require('../user/user.service');
 
 const CommentController = () => {
   const prefix = '/api/posts/:post_id/comments';
   const router = Router({ mergeParams: true });
 
-  router.get('/', PostPipes.Existence, (req, res) => {
+  router.get('/', PostPipes.Existence, async (req, res) => {
     try {
       const { post_id } = req.params;
-      const rows = CommentService.getComments(post_id);
+      const rows = await CommentService.getComments(post_id);
       res.status(200).send({ ok: true, rows });
     } catch (error) {
       CustomErrors.Response(res, error);
@@ -55,7 +56,7 @@ const CommentController = () => {
           comment_id,
           commentDto,
         );
-        res.status(204).send({ ok: true });
+        res.status(200).send({ ok: true });
       } catch (error) {
         CustomErrors.Response(res, error);
       }
@@ -72,7 +73,7 @@ const CommentController = () => {
         const { user_id } = req.user;
         const { post_id, comment_id } = req.params;
         await CommentService.deleteComment(user_id, post_id, comment_id);
-        res.status(204).send({ ok: true });
+        res.status(200).send({ ok: true });
       } catch (error) {
         CustomErrors.Response(res, error);
       }

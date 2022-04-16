@@ -4,9 +4,11 @@ const CommentService = require('./comment.service');
 
 const CommentPipes = {
   Authorization: async (req, res, next) => {
+    console.log(req.params);
     const { user_id } = req.user;
     const post_id = Number(req.params.post_id);
     const comment_id = Number(req.params.comment_id);
+    const comment = await CommentService.getComment(post_id, comment_id);
 
     if (!comment) {
       return res.status(404).send({
@@ -27,7 +29,7 @@ const CommentPipes = {
   Existence: async (req, res, next) => {
     const post_id = Number(req.params.post_id);
     const comment_id = Number(req.params.comment_id);
-    const comment = await CommentService.getPost(post_id, comment_id);
+    const comment = await CommentService.getComment(post_id, comment_id);
 
     if (!comment) {
       return res.status(404).send({
