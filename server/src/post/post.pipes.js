@@ -20,7 +20,7 @@ const PostPipes = {
         message: '수정 또는 삭제 권한이 없는 게시물입니다.',
       });
     }
-    req.params = { post_id };
+    req.params = { post_id, ...req.params };
     next();
   },
   Existence: async (req, res, next) => {
@@ -33,7 +33,7 @@ const PostPipes = {
         message: '존재하지 않는 게시물입니다.',
       });
     }
-    req.params = { post_id };
+    req.params = { post_id, ...req.params };
     next();
   },
 };

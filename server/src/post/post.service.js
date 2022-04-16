@@ -1,6 +1,6 @@
 'use strict';
 
-const { Post, User, Like, Sequelize } = require('../../models');
+const { Post, User, Like } = require('../../models');
 const CustomErrors = require('../../commons/CustomErrors');
 
 const PostService = {
@@ -15,16 +15,25 @@ const PostService = {
           },
         ],
       });
-      const postValues = postsAll.map((el) => el.get({ plain: true }));
 
-      const likesAll = await Like.findAll();
+      const likesAll = await Like.findAll({
+        include: [
+          {
+            model: User,
+            as: 'user',
+            attributes: ['email', 'nickname'],
+          },
+        ],
+      });
+
+      const postValues = postsAll.map((el) => el.get({ plain: true }));
       const likesValues = likesAll.map((el) => el.get({ plain: true }));
 
       return postValues.map((post) => {
-        const likes = likesValues.filter(
+        const likesDetail = likesValues.filter(
           (like) => like.post_id === post.post_id,
         );
-        return { ...post, likes: likes.length };
+        return { ...post, likesDetail, likes: likesDetail.length };
       });
     } catch (error) {
       CustomErrors.Database(error);
@@ -32,21 +41,27 @@ const PostService = {
   },
   getPost: async (post_id) => {
     try {
-      return await Post.findOne({
+      const postOne = await Post.findOne({
         include: [
           {
             model: User,
             as: 'user',
             attributes: ['email', 'nickname'],
           },
+        ],
+        where: { post_id },
+      });
+      const likesDetail = await Like.findAll({
+        include: [
           {
-            model: Like,
-            as: 'likes',
-            attributes: ['user_id'],
+            model: User,
+            as: 'user',
+            attributes: ['email', 'nickname'],
           },
         ],
         where: { post_id },
       });
+      return { ...postOne.dataValues, likesDetail, likes: likesDetail.length };
     } catch (error) {
       CustomErrors.Database(error);
     }

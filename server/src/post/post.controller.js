@@ -24,7 +24,7 @@ const PostController = () => {
   router.get('/:post_id', PostPipes.Existence, async (req, res) => {
     try {
       const { post_id } = req.params;
-      const row = await PostService.getPost(Number(post_id));
+      const row = await PostService.getPost(post_id);
       res.status(200).send({ ok: true, row });
     } catch (error) {
       CustomErrors.Response(res, error);
@@ -37,15 +37,15 @@ const PostController = () => {
     PostValidation.Content,
     Upload.single('image'),
     async (req, res) => {
-      const { file } = req;
-      const { user_id } = req.user;
-      const image_url = file ? `/image/${req.file.filename}` : null;
-      const postDto = {
-        ...req.body,
-        image_url,
-        user_id,
-      };
       try {
+        const { file } = req;
+        const { user_id } = req.user;
+        const image_url = file ? `/image/${req.file.filename}` : null;
+        const postDto = {
+          ...req.body,
+          image_url,
+          user_id,
+        };
         await PostService.createPost(postDto);
         res.status(201).send({ ok: true });
       } catch (error) {
@@ -68,7 +68,7 @@ const PostController = () => {
       const image_url = file ? `/image/${req.file.filename}` : null;
       const postDto = { content, image_url };
       try {
-        await PostService.updatePost(Number(post_id), user_id, postDto);
+        await PostService.updatePost(post_id, user_id, postDto);
         res.status(200).send({ ok: true });
       } catch (error) {
         CustomErrors.Response(res, error);
@@ -81,10 +81,10 @@ const PostController = () => {
     UserPipes.Authorization,
     PostPipes.Authorization,
     async (req, res) => {
-      const { user_id } = req.user;
-      const { post_id } = req.params;
       try {
-        await PostService.deletePost(Number(post_id), user_id);
+        const { user_id } = req.user;
+        const { post_id } = req.params;
+        await PostService.deletePost(post_id, user_id);
         res.status(204).send({ ok: true });
       } catch (error) {
         const { code, data } = error;
