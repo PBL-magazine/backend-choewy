@@ -16,6 +16,7 @@ const controllers = [
   require('./src/user/user.controller'),
   require('./src/post/post.controller'),
   require('./src/like/like.controller'),
+  require('./src/comment/comment.controller'),
 ];
 
 class App {

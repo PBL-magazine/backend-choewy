@@ -7,11 +7,11 @@ const UserPipes = require('../user/user.pipes');
 const LikeService = require('./like.service');
 
 const LikeController = () => {
-  const prefix = '/api/posts/:post_id';
+  const prefix = '/api/posts/:post_id/like';
   const router = Router({ mergeParams: true });
 
   router.put(
-    '/like',
+    '/',
     UserPipes.Authorization,
     PostPipes.Existence,
     async (req, res) => {
