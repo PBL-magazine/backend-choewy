@@ -1,7 +1,7 @@
 'use strict';
 
 const { Op } = require('sequelize');
-const { User } = require('../models');
+const { User } = require('../../models');
 const UserUtils = require('./user.utils');
 
 const UserService = {

@@ -1,6 +1,6 @@
 'use strict';
 
-const { Post, User, Like, Sequelize } = require('../models');
+const { Post, User, Like, Sequelize } = require('../../models');
 
 const PostService = {
   getPosts: async () => {
