@@ -1,14 +1,15 @@
 'use strict';
 
-const CommentValidation = {
-  Content: (req, res, next) => {
-    const { content } = req.body;
+const Response = require('../../commons/response');
+const CommentError = require('./comment.error');
 
-    if (!content) {
-      return res.status(400).send({
-        ok: false,
-        message: '댓글 내용을 입력하세요.',
-      });
+const CommentValidation = {
+  /* @Comment Content Validation */
+  Content: (req, res, next) => {
+    try {
+      !req.body.content && CommentError.NotContent();
+    } catch (error) {
+      Response.Fails(res, error);
     }
 
     next();

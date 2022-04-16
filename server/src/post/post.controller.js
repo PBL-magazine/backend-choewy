@@ -7,30 +7,34 @@ const UserPipes = require('../user/user.pipes');
 const PostValidation = require('./post.validation');
 const PostService = require('./post.service');
 const PostPipes = require('./post.pipes');
-const CustomErrors = require('../../commons/CustomErrors');
+const Response = require('../../commons/response');
 
 const PostController = () => {
   const prefix = '/api/posts';
   const router = Router();
+
+  /* @Get All Posts Controller */
   router.get('/', async (_, res) => {
     try {
       const rows = await PostService.getPosts();
-      res.status(200).send({ ok: true, rows });
+      Response.Success.Ok(res, { rows });
     } catch (error) {
-      CustomErrors.Response(res, error);
+      Response.Fails(res, error);
     }
   });
 
+  /* @Get One Post Controller */
   router.get('/:post_id', PostPipes.Existence, async (req, res) => {
     try {
       const { post_id } = req.params;
       const row = await PostService.getPost(post_id);
-      res.status(200).send({ ok: true, row });
+      Response.Success.Ok(res, { row });
     } catch (error) {
-      CustomErrors.Response(res, error);
+      Response.Fails(res, error);
     }
   });
 
+  /* @Create Post Controller */
   router.post(
     '/',
     UserPipes.Authorization,
@@ -47,13 +51,14 @@ const PostController = () => {
           user_id,
         };
         await PostService.createPost(postDto);
-        res.status(201).send({ ok: true });
+        Response.Success.Created(res);
       } catch (error) {
-        CustomErrors.Response(res, error);
+        Response.Fails(res, error);
       }
     },
   );
 
+  /* @Update Post Controller */
   router.patch(
     '/:post_id',
     UserPipes.Authorization,
@@ -61,21 +66,22 @@ const PostController = () => {
     PostValidation.Content,
     Upload.single('image'),
     async (req, res) => {
-      const { file } = req;
-      const { user_id } = req.user;
-      const { post_id } = req.params;
-      const { content } = req.body;
-      const image_url = file ? `/image/${req.file.filename}` : null;
-      const postDto = { content, image_url };
       try {
+        const { file } = req;
+        const { user_id } = req.user;
+        const { post_id } = req.params;
+        const { content } = req.body;
+        const image_url = file ? `/image/${req.file.filename}` : null;
+        const postDto = { content, image_url };
         await PostService.updatePost(post_id, user_id, postDto);
-        res.status(200).send({ ok: true });
+        Response.Success.Ok(res);
       } catch (error) {
-        CustomErrors.Response(res, error);
+        Response.Fails(res, error);
       }
     },
   );
 
+  /* @Delete Post Controller */
   router.delete(
     '/:post_id',
     UserPipes.Authorization,
@@ -85,10 +91,9 @@ const PostController = () => {
         const { user_id } = req.user;
         const { post_id } = req.params;
         await PostService.deletePost(post_id, user_id);
-        res.status(204).send({ ok: true });
+        Response.Success.Ok(res);
       } catch (error) {
-        const { code, data } = error;
-        res.status(code).send(data);
+        Response.Fails(res, error);
       }
     },
   );

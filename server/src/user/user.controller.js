@@ -1,7 +1,8 @@
 'use strict';
 
 const { Router } = require('express');
-const CustomErrors = require('../../commons/CustomErrors');
+
+const Response = require('../../commons/response');
 const UserPipes = require('./user.pipes');
 const UserService = require('./user.service');
 const UserUtils = require('./user.utils');
@@ -11,6 +12,7 @@ const UserController = () => {
   const prefix = '/api/users';
   const router = Router();
 
+  /* @User Signup Controller */
   router.post(
     '/signup',
     UserValidation.Email,
@@ -21,13 +23,14 @@ const UserController = () => {
         const payload = await UserService.signupUser(req.body);
         const token = UserUtils.GenerateToken(payload);
         res.cookie('token', token);
-        res.status(201).send({ ok: true });
+        Response.Success.Created(res);
       } catch (error) {
-        CustomErrors.Response(res, error);
+        Response.Fails(res, error);
       }
     },
   );
 
+  /* @User Signin Controller */
   router.post(
     '/signin',
     UserValidation.Email,
@@ -37,24 +40,27 @@ const UserController = () => {
         const payload = await UserService.signinUser(req.body);
         const token = UserUtils.GenerateToken(payload);
         res.cookie('token', token);
-        res.status(200).send({ ok: true });
+        Response.Success.Created(res);
       } catch (error) {
-        CustomErrors.Response(res, error);
+        Response.Fails(res, error);
       }
     },
   );
 
+  /* @User Authorization Controller */
   router.get('/auth', UserPipes.Authorization, (req, res) => {
-    const data = {
-      ok: true,
-      user: {
+    try {
+      const user = {
+        user_id: req.user.user_id,
         email: req.user.email,
         nickname: req.user.nickname,
         createdAt: req.user.createdAt,
-      },
-    };
-    res.cookie('token', req.token);
-    res.status(200).send(data);
+      };
+      res.cookie('token', req.token);
+      Response.Success.Created(res, { user });
+    } catch (error) {
+      Response.Fails(res, error);
+    }
   });
 
   return [prefix, router];

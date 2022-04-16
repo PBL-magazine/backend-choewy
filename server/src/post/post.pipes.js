@@ -1,39 +1,51 @@
 'use strict';
 
+const Response = require('../../commons/response');
 const PostService = require('./post.service');
+const PostError = require('./post.error');
 
 const PostPipes = {
+  /* @Post Update or Delete Authorization Check Pipe */
   Authorization: async (req, res, next) => {
     const { user_id } = req.user;
     const post_id = Number(req.params.post_id);
-    const post = await PostService.getPost(post_id);
 
-    if (!post) {
-      return res.status(404).send({
-        ok: false,
-        message: '존재하지 않는 게시물입니다.',
-      });
+    let post;
+
+    try {
+      post = await PostService.getPost(post_id);
+      !post && PostError.NotFound();
+    } catch (error) {
+      Response.Fails(res, error);
     }
-    if (post.user_id !== user_id) {
-      return res.status(401).send({
-        ok: false,
-        message: '수정 또는 삭제 권한이 없는 게시물입니다.',
-      });
+
+    try {
+      const isOwner = post.user_id === user_id;
+      !isOwner && PostError.Unauthorized();
+    } catch (error) {
+      Response.Fails(res, error);
     }
-    req.params = { post_id, ...req.params };
+
+    req.params = { ...req.params, post_id };
+
     next();
   },
+
+  /* @Post Existence Check Pipe */
   Existence: async (req, res, next) => {
     const post_id = Number(req.params.post_id);
-    const post = await PostService.getPost(post_id);
 
-    if (!post) {
-      return res.status(404).send({
-        ok: false,
-        message: '존재하지 않는 게시물입니다.',
-      });
+    let post;
+
+    try {
+      post = await PostService.getPost(post_id);
+      !post && PostError.NotFound();
+    } catch (error) {
+      Response.Fails(res, error);
     }
-    req.params = { post_id, ...req.params };
+
+    req.params = { ...req.params, post_id };
+
     next();
   },
 };

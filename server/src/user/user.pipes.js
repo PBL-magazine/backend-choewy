@@ -1,31 +1,31 @@
 'use strict';
 
+const Response = require('../../commons/response');
+const UserError = require('./user.error');
 const UserService = require('./user.service');
 const UserUtils = require('./user.utils');
 
 const UserPipes = {
+  /* @User Token Verification Check Pipe */
   async Authorization(req, res, next) {
     const { authorization } = req.headers;
     const payload = UserUtils.Authorization(authorization);
 
-    if ([0, 1, 2].includes(payload)) {
+    try {
+      const isInvalid = [0, 1, 2].includes(payload);
+      isInvalid && UserError.NeedSignin();
+    } catch (error) {
       res.cookie('token', undefined);
-      return res.status(401).send({
-        ok: false,
-        message: '로그인이 필요합니다.',
-      });
+      Response.Fails(res, error);
     }
 
     try {
       const user = await UserService.findUserByPayload(payload);
       req.user = user;
-      // 토큰 재발급
-      // req.token = UserUtils.GenerateToken(payload);
       req.token = authorization.split(' ')[1];
       next();
     } catch (error) {
-      const { code, data } = error;
-      res.status(code).send(data);
+      Response.Fails(res, error);
     }
   },
 };

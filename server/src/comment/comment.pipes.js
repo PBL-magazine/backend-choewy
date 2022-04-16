@@ -1,44 +1,61 @@
 'use strict';
 
+const Response = require('../../commons/response');
 const CommentService = require('./comment.service');
+const CommentError = require('./comment.error');
 
 const CommentPipes = {
+  /* @Comment Update or Delete Authorization Check Pipe */
   Authorization: async (req, res, next) => {
-    console.log(req.params);
     const { user_id } = req.user;
     const post_id = Number(req.params.post_id);
     const comment_id = Number(req.params.comment_id);
-    const comment = await CommentService.getComment(post_id, comment_id);
 
-    if (!comment) {
-      return res.status(404).send({
-        ok: false,
-        message: '존재하지 않는 댓글입니다.',
-      });
-    }
-    if (comment.user_id !== user_id) {
-      return res.status(401).send({
-        ok: false,
-        message: '수정 또는 삭제 권한이 없는 댓글입니다.',
-      });
+    let comment;
+
+    try {
+      comment = await CommentService.getComment(post_id, comment_id);
+      !comment && CommentError.NotFound();
+    } catch (error) {
+      Response.Fails(res, error);
     }
 
-    req.params = { post_id, comment_id };
+    try {
+      const isOwner = comment.user_id === user_id;
+      !isOwner && CommentError.Unauthorized();
+    } catch (error) {
+      Response.Fails(res, error);
+    }
+
+    req.params = {
+      ...req.params,
+      post_id,
+      comment_id,
+    };
+
     next();
   },
+
+  /* @Comment Existence Check Pipe */
   Existence: async (req, res, next) => {
     const post_id = Number(req.params.post_id);
     const comment_id = Number(req.params.comment_id);
-    const comment = await CommentService.getComment(post_id, comment_id);
 
-    if (!comment) {
-      return res.status(404).send({
-        ok: false,
-        message: '존재하지 않는 댓글입니다.',
-      });
+    let comment;
+
+    try {
+      comment = await CommentService.getComment(post_id, comment_id);
+      !comment && CommentError.NotFound();
+    } catch (error) {
+      Response.Fails(res, error);
     }
 
-    req.params = { post_id, comment_id };
+    req.params = {
+      ...req.params,
+      post_id,
+      comment_id,
+    };
+
     next();
   },
 };

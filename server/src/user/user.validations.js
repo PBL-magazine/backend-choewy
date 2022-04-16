@@ -1,6 +1,8 @@
 'use strict';
 
 const Joi = require('joi');
+const Response = require('../../commons/response');
+const UserError = require('./user.error');
 
 const Validation = {
   email: Joi.string().email().required().messages({
@@ -35,64 +37,52 @@ const Validation = {
   }),
 };
 
-const Exceptions = (error) => {
-  const { details } = error;
-  const { message } = details[0];
-  return message;
-};
-
 const UserValidation = {
+  /* @Email Validation */
   Email: async (req, res, next) => {
     try {
       const { email } = req.body;
       await Validation.email.validateAsync(email);
       next();
     } catch (error) {
-      const message = Exceptions(error);
-      res.status(400).send({ ok: false, message });
+      Response.Validation(res, error);
     }
   },
+
+  /* @Nickname Validation */
   Nickname: async (req, res, next) => {
     try {
       const { nickname } = req.body;
       await Validation.nickname.validateAsync(nickname);
       next();
     } catch (error) {
-      const message = Exceptions(error);
-      res.status(400).send({ ok: false, message });
+      Response.Validation(res, error);
     }
   },
+
+  /* @Password Validation */
   Password: async (req, res, next) => {
     try {
       const { nickname, password } = req.body;
       await Validation.password.validateAsync(password);
-      if (password.includes(nickname)) {
-        return res.status(400).send({
-          ok: false,
-          message: '비밀번호에 닉네임이 포함되어 있습니다.',
-        });
-      }
+      const isInclude = password.includes(nickname);
+      isInclude && UserError.NicknameInPassword();
       next();
     } catch (error) {
-      const message = Exceptions(error);
-      res.status(400).send({ ok: false, message });
+      Response.Validation(res, error);
     }
   },
-  // 이 부분은 고려하지 않기로 하였음(20220416)
+
+  /* @Password Validation */
   confirmPassword: async (req, res, next) => {
     try {
       const { password, confirmPassword } = req.body;
       await Validation.confirmPassword.validateAsync(confirmPassword);
-      if (password !== confirmPassword) {
-        return res.status(400).send({
-          ok: false,
-          message: '비밀번호가 일치하지 않습니다.',
-        });
-      }
+      const isCorrect = password !== confirmPassword;
+      !isCorrect && UserError.InvalidPassword();
       next();
     } catch (error) {
-      const message = Exceptions(error);
-      res.status(400).send({ ok: false, message });
+      Response.Validation(res, error);
     }
   },
 };

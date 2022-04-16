@@ -1,28 +1,26 @@
 'use strict';
 
+const Response = require('../../commons/response');
+const PostError = require('./post.error');
+
 const PostValidation = {
+  /* @Content Validation */
   Content: (req, res, next) => {
-    const { content } = req.body;
-
-    if (!content) {
-      return res.status(400).send({
-        ok: false,
-        message: '게시물의 내용을 입력하세요.',
-      });
+    try {
+      !req.content && PostError.NotContent();
+    } catch (error) {
+      Response.Validation(res, error);
     }
-
     next();
   },
+
+  /* @Image Validation */
   Image: (req, res, next) => {
-    const { file } = req;
-
-    if (!file) {
-      return res.status(400).send({
-        ok: false,
-        message: '이미지 파일을 선택하세요.',
-      });
+    try {
+      !req.file && PostError.NotImage();
+    } catch (error) {
+      Response.Validation(res, error);
     }
-
     next();
   },
 };

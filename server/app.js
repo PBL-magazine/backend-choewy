@@ -5,36 +5,39 @@ require('dotenv').config();
 const express = require('express');
 const db = require('./models');
 
-const middlewares = [
+// @App Middlewares
+const Middlewares = [
   express.json(),
   express.urlencoded({ extended: true }),
   express.static('../upload'),
   require('cors')(),
 ];
 
-const controllers = [
+// @App Controllers
+const Controllers = [
   require('./src/user/user.controller'),
   require('./src/post/post.controller'),
   require('./src/like/like.controller'),
   require('./src/comment/comment.controller'),
 ];
 
+// @App Module
 class App {
   constructor() {
     this.app = express();
-    this.middlewares();
-    this.controllers();
+    this.setMiddlewares();
+    this.setControllers();
     this.listen();
   }
 
-  middlewares() {
-    middlewares.forEach((middleware) => {
-      this.app.use(middleware);
+  setMiddlewares() {
+    Middlewares.forEach((Middleware) => {
+      this.app.use(Middleware);
     });
   }
 
-  controllers() {
-    controllers.forEach((Controller) => {
+  setControllers() {
+    Controllers.forEach((Controller) => {
       this.app.use(...Controller());
     });
   }
@@ -43,7 +46,7 @@ class App {
     db.sequelize
       .sync()
       .then(() => {
-        const port = 5000;
+        const port = process.env.PORT || 5000;
         const log = `Server Running on port ${port}`;
         this.app.listen(port, () => console.log(log));
       })
@@ -53,4 +56,5 @@ class App {
   }
 }
 
+// @App Run
 new App();

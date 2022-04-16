@@ -1,9 +1,6 @@
 'use strict';
 
-// 서브쿼리로 해결하는 방법도 있음
-
 const { Router } = require('express');
-const CustomErrors = require('../../commons/CustomErrors');
 const UserPipes = require('../user/user.pipes');
 const PostPipes = require('../post/post.pipes');
 const CommentService = require('./comment.service');
