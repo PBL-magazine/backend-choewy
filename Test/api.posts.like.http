@@ -1,0 +1,5 @@
+###
+
+PUT http://localhost:5000/api/posts/2/like
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RAZ21haWwuY29tIiwibmlja25hbWUiOiJjaG9ld3kiLCJpYXQiOjE2NTAxMDc4Mjl9.C0jQKOumrCRI_kSQhsKA113Rw24_Gd047LX4LCMozHE

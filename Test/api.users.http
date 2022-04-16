@@ -1,0 +1,26 @@
+### 
+
+POST http://localhost:5000/api/users/signup
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "nickname": "choewy",
+  "password": "test"
+}
+
+###
+
+POST http://localhost:5000/api/users/signin
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password": "choewy"
+}
+
+###
+
+GET http://localhost:5000/api/users/auth
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNob2V3eTMyQGdtYWlsLmNvbSIsIm5pY2tuYW1lIjoiY2hvZXd5IiwiaWF0IjoxNjUwMTA1NDc0fQ.Fwg8fQvgPEcSdeYSR8OdhAFLvDRrCPH8ggzjFLNwMp4
