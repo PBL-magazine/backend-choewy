@@ -3,11 +3,11 @@
 const { Op } = require('sequelize');
 const { User } = require('../../models');
 const UserUtils = require('./user.utils');
+const CustomErrors = require('../../commons/CustomErrors');
 
 const UserService = {
   signupUser: async (userDto) => {
     const { email, nickname, password } = userDto;
-
     const existUser = await User.findOne({
       where: {
         [Op.or]: [{ email, nickname }],
@@ -30,13 +30,7 @@ const UserService = {
       await User.create({ email, nickname, password: hashed });
       return { email, nickname };
     } catch (error) {
-      throw {
-        code: 500,
-        data: {
-          ok: false,
-          message: error.parent.sqlMessage,
-        },
-      };
+      CustomErrors.Database(error);
     }
   },
 

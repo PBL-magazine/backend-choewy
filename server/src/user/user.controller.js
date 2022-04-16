@@ -22,8 +22,7 @@ const UserController = () => {
         res.cookie('token', token);
         res.status(201).send({ ok: true });
       } catch (error) {
-        const { code, data } = error;
-        res.status(code).send(data);
+        CustomErrors.Response(res, error);
       }
     },
   );
@@ -39,8 +38,7 @@ const UserController = () => {
         res.cookie('token', token);
         res.status(200).send({ ok: true });
       } catch (error) {
-        const { code, data } = error;
-        res.status(code).send(data);
+        CustomErrors.Response(res, error);
       }
     },
   );

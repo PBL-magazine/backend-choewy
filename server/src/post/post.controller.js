@@ -7,31 +7,27 @@ const UserPipes = require('../user/user.pipes');
 const PostValidation = require('./post.validation');
 const PostService = require('./post.service');
 const PostPipes = require('./post.pipes');
+const CustomErrors = require('../../commons/CustomErrors');
 
 const PostController = () => {
   const prefix = '/api/posts';
   const router = Router();
-
   router.get('/', async (_, res) => {
     try {
       const rows = await PostService.getPosts();
       res.status(200).send({ ok: true, rows });
     } catch (error) {
-      const { code, data } = error;
-      res.status(code).send(data);
+      CustomErrors.Response(res, error);
     }
   });
 
-  router.get('/:post_id', async (req, res) => {
+  router.get('/:post_id', PostPipes.Existence, async (req, res) => {
     try {
       const { post_id } = req.params;
       const row = await PostService.getPost(Number(post_id));
       res.status(200).send({ ok: true, row });
     } catch (error) {
-      console.log(error);
-      // const { code, data } = error;
-      // res.status(code).send(data);
-      res.send({ error });
+      CustomErrors.Response(res, error);
     }
   });
 
@@ -53,8 +49,7 @@ const PostController = () => {
         await PostService.createPost(postDto);
         res.status(201).send({ ok: true });
       } catch (error) {
-        const { code, data } = error;
-        res.status(code).send(data);
+        CustomErrors.Response(res, error);
       }
     },
   );
@@ -76,8 +71,7 @@ const PostController = () => {
         await PostService.updatePost(Number(post_id), user_id, postDto);
         res.status(200).send({ ok: true });
       } catch (error) {
-        const { code, data } = error;
-        res.status(code).send(data);
+        CustomErrors.Response(res, error);
       }
     },
   );

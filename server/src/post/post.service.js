@@ -1,6 +1,7 @@
 'use strict';
 
 const { Post, User, Like, Sequelize } = require('../../models');
+const CustomErrors = require('../../commons/CustomErrors');
 
 const PostService = {
   getPosts: async () => {
@@ -22,69 +23,42 @@ const PostService = {
         ],
       });
     } catch (error) {
-      console.log(error);
-      throw {
-        code: 500,
-        data: {
-          ok: false,
-          message: 'DB Error',
-          error,
-        },
-      };
+      CustomErrors.Database(error);
     }
   },
   getPost: async (post_id) => {
-    const likes = await Like.findAndCountAll({
-      where: { post_id },
-    });
-
-    const post = await Post.findOne({
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: ['email', 'nickname'],
-        },
-      ],
-      where: { post_id },
-    });
-
-    if (!post) {
-      throw {
-        code: 404,
-        data: {
-          ok: false,
-          message: '게시물 정보를 찾을 수 없습니다.',
-        },
-      };
+    try {
+      return await Post.findOne({
+        include: [
+          {
+            model: User,
+            as: 'user',
+            attributes: ['email', 'nickname'],
+          },
+          {
+            model: Like,
+            as: 'likes',
+            attributes: ['post_id'],
+          },
+        ],
+        where: { post_id },
+      });
+    } catch (error) {
+      CustomErrors.Database(error);
     }
-    post.likes = likes;
-    return post;
   },
   createPost: async (postDto) => {
     try {
       await Post.create(postDto);
     } catch (error) {
-      throw {
-        code: 500,
-        data: {
-          ok: false,
-          message: error.parent.sqlMessage,
-        },
-      };
+      CustomErrors.Database(error);
     }
   },
   updatePost: async (post_id, user_id, postDto) => {
     try {
       await Post.update(postDto, { where: { post_id, user_id } });
     } catch (error) {
-      throw {
-        code: 500,
-        data: {
-          ok: false,
-          message: error.parent.sqlMessage,
-        },
-      };
+      CustomErrors.Database(error);
     }
   },
   deletePost: async (post_id, user_id) => {
@@ -96,13 +70,7 @@ const PostService = {
         },
       });
     } catch (error) {
-      throw {
-        code: 500,
-        data: {
-          ok: false,
-          message: error.parent.sqlMessage,
-        },
-      };
+      CustomErrors.Database(error);
     }
   },
 };
