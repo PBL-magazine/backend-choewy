@@ -17,10 +17,10 @@
   },
   "production": {
     "username": "root",
-    "password": "root",
+    "password": "password",
     "database": "magazine_production",
     "host": "127.0.0.1",
-    "port": 5002,
+    "port": 3306,
     "dialect": "mysql"
   }
 }
