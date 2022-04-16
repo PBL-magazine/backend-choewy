@@ -14,7 +14,8 @@ const Like = (sequelize, DataTypes) => {
       underscored: true,
     },
   );
-
+  // 테스트
+  Like.removeAttribute('id');
   return Like;
 };
 

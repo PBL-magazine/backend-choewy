@@ -15,6 +15,7 @@ const middlewares = [
 const controllers = [
   require('./src/user/user.controller'),
   require('./src/post/post.controller'),
+  require('./src/like/like.controller'),
 ];
 
 class App {
