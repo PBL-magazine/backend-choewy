@@ -5,22 +5,26 @@ const CustomErrors = require('../../commons/CustomErrors');
 
 const PostService = {
   getPosts: async () => {
-    // @TODO COUNT로 좋아요 개수 불러와야 함.
-    // 지금은 좋아요 정보를 전부 불러오도록 되어 있음.
     try {
-      return await Post.findAll({
+      const postsAll = await Post.findAll({
         include: [
           {
             model: User,
             as: 'user',
             attributes: ['email', 'nickname'],
           },
-          {
-            model: Like,
-            as: 'likes',
-            attributes: ['post_id'],
-          },
         ],
+      });
+      const postValues = postsAll.map((el) => el.get({ plain: true }));
+
+      const likesAll = await Like.findAll();
+      const likesValues = likesAll.map((el) => el.get({ plain: true }));
+
+      return postValues.map((post) => {
+        const likes = likesValues.filter(
+          (like) => like.post_id === post.post_id,
+        );
+        return { ...post, likes: likes.length };
       });
     } catch (error) {
       CustomErrors.Database(error);
@@ -38,7 +42,7 @@ const PostService = {
           {
             model: Like,
             as: 'likes',
-            attributes: ['post_id'],
+            attributes: ['user_id'],
           },
         ],
         where: { post_id },
