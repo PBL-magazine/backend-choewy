@@ -27,7 +27,7 @@ services:
     networks:
       - magazine
 
-# sudo docker network create --driver=bridge magazine
+# TODO : sudo docker network create --driver=bridge magazine
 networks:
   magazine:
     driver: bridge
