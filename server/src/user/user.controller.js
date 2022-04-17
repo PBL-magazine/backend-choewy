@@ -63,6 +63,12 @@ const UserController = () => {
     }
   });
 
+  /* @User Signout */
+  router.delete('/signout', (_, res) => {
+    res.cookie('token', undefined);
+    Response.Success.Ok(res);
+  });
+
   return [prefix, router];
 };
 

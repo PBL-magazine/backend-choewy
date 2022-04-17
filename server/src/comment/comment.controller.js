@@ -5,6 +5,7 @@ const UserPipes = require('../user/user.pipes');
 const PostPipes = require('../post/post.pipes');
 const CommentService = require('./comment.service');
 const CommentPipes = require('./comment.pipes');
+const Response = require('../../commons/response');
 
 const CommentController = () => {
   const prefix = '/api/posts/:post_id/comments';
@@ -14,9 +15,9 @@ const CommentController = () => {
     try {
       const { post_id } = req.params;
       const rows = await CommentService.getComments(post_id);
-      res.status(200).send({ ok: true, rows });
+      Response.Success.Ok(res, { rows });
     } catch (error) {
-      CustomErrors.Response(res, error);
+      Response.Fails(res, error);
     }
   });
 
@@ -30,9 +31,9 @@ const CommentController = () => {
         const { post_id } = req.params;
         const commentDto = req.body;
         await CommentService.createComment(user_id, post_id, commentDto);
-        res.status(201).send({ ok: true });
+        Response.Success.Created(res);
       } catch (error) {
-        CustomErrors.Response(res, error);
+        Response.Fails(res, error);
       }
     },
   );
@@ -53,9 +54,9 @@ const CommentController = () => {
           comment_id,
           commentDto,
         );
-        res.status(200).send({ ok: true });
+        Response.Success.Ok(res);
       } catch (error) {
-        CustomErrors.Response(res, error);
+        Response.Fails(res, error);
       }
     },
   );
@@ -70,9 +71,9 @@ const CommentController = () => {
         const { user_id } = req.user;
         const { post_id, comment_id } = req.params;
         await CommentService.deleteComment(user_id, post_id, comment_id);
-        res.status(200).send({ ok: true });
+        Response.Success.Ok(res);
       } catch (error) {
-        CustomErrors.Response(res, error);
+        Response.Fails(res, error);
       }
     },
   );

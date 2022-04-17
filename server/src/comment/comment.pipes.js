@@ -17,14 +17,14 @@ const CommentPipes = {
       comment = await CommentService.getComment(post_id, comment_id);
       !comment && CommentError.NotFound();
     } catch (error) {
-      Response.Fails(res, error);
+      return Response.Fails(res, error);
     }
 
     try {
       const isOwner = comment.user_id === user_id;
       !isOwner && CommentError.Unauthorized();
     } catch (error) {
-      Response.Fails(res, error);
+      return Response.Fails(res, error);
     }
 
     req.params = {
@@ -47,7 +47,7 @@ const CommentPipes = {
       comment = await CommentService.getComment(post_id, comment_id);
       !comment && CommentError.NotFound();
     } catch (error) {
-      Response.Fails(res, error);
+      return Response.Fails(res, error);
     }
 
     req.params = {

@@ -13,17 +13,17 @@ const PostPipes = {
     let post;
 
     try {
-      post = await PostService.getPost(post_id);
+      post = await PostService.getPostExistance(post_id);
       !post && PostError.NotFound();
     } catch (error) {
-      Response.Fails(res, error);
+      return Response.Fails(res, error);
     }
 
     try {
       const isOwner = post.user_id === user_id;
       !isOwner && PostError.Unauthorized();
     } catch (error) {
-      Response.Fails(res, error);
+      return Response.Fails(res, error);
     }
 
     req.params = { ...req.params, post_id };
@@ -38,10 +38,10 @@ const PostPipes = {
     let post;
 
     try {
-      post = await PostService.getPost(post_id);
+      post = await PostService.getPostExistance(post_id);
       !post && PostError.NotFound();
     } catch (error) {
-      Response.Fails(res, error);
+      return Response.Fails(res, error);
     }
 
     req.params = { ...req.params, post_id };

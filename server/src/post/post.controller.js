@@ -38,8 +38,8 @@ const PostController = () => {
   router.post(
     '/',
     UserPipes.Authorization,
-    PostValidation.Content,
     Upload.single('image'),
+    PostValidation.Content,
     async (req, res) => {
       try {
         const { file } = req;
@@ -64,15 +64,12 @@ const PostController = () => {
     UserPipes.Authorization,
     PostPipes.Authorization,
     PostValidation.Content,
-    Upload.single('image'),
     async (req, res) => {
       try {
-        const { file } = req;
         const { user_id } = req.user;
         const { post_id } = req.params;
         const { content } = req.body;
-        const image_url = file ? `/image/${req.file.filename}` : null;
-        const postDto = { content, image_url };
+        const postDto = { content };
         await PostService.updatePost(post_id, user_id, postDto);
         Response.Success.Ok(res);
       } catch (error) {

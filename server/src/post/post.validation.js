@@ -6,10 +6,12 @@ const PostError = require('./post.error');
 const PostValidation = {
   /* @Content Validation */
   Content: (req, res, next) => {
+    console.log(req.body);
     try {
-      !req.content && PostError.NotContent();
+      !req.body.content && PostError.NotContent();
     } catch (error) {
-      Response.Validation(res, error);
+      console.log(error);
+      return Response.Fails(res, error);
     }
     next();
   },
@@ -19,7 +21,7 @@ const PostValidation = {
     try {
       !req.file && PostError.NotImage();
     } catch (error) {
-      Response.Validation(res, error);
+      return Response.Fails(res, error);
     }
     next();
   },

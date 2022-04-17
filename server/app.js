@@ -9,7 +9,6 @@ const db = require('./models');
 const Middlewares = [
   express.json(),
   express.urlencoded({ extended: true }),
-  express.static('../upload'),
   require('cors')(),
 ];
 
@@ -31,6 +30,7 @@ class App {
   }
 
   setMiddlewares() {
+    this.app.use('/image', express.static('../upload'));
     Middlewares.forEach((Middleware) => {
       this.app.use(Middleware);
     });

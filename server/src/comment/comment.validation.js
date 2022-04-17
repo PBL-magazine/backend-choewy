@@ -9,7 +9,7 @@ const CommentValidation = {
     try {
       !req.body.content && CommentError.NotContent();
     } catch (error) {
-      Response.Fails(res, error);
+      return Response.Fails(res, error);
     }
 
     next();

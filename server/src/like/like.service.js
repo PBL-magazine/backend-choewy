@@ -7,7 +7,14 @@ const LikeService = {
   changeLike: async (user_id, post_id) => {
     const target = { user_id, post_id };
     const like = await Like.findOne({ where: target });
-    like ? await Like.destroy({ where: target }) : Like.create(target);
+
+    if (like) {
+      await Like.destroy({ where: target });
+      return false;
+    }
+
+    await Like.create(target);
+    return true;
   },
 };
 

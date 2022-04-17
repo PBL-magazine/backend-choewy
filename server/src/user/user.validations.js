@@ -45,7 +45,7 @@ const UserValidation = {
       await Validation.email.validateAsync(email);
       next();
     } catch (error) {
-      Response.Validation(res, error);
+      return Response.Validation(res, error);
     }
   },
 
@@ -56,7 +56,7 @@ const UserValidation = {
       await Validation.nickname.validateAsync(nickname);
       next();
     } catch (error) {
-      Response.Validation(res, error);
+      return Response.Validation(res, error);
     }
   },
 
@@ -69,7 +69,7 @@ const UserValidation = {
       isInclude && UserError.NicknameInPassword();
       next();
     } catch (error) {
-      Response.Validation(res, error);
+      return Response.Validation(res, error);
     }
   },
 
@@ -82,7 +82,7 @@ const UserValidation = {
       !isCorrect && UserError.InvalidPassword();
       next();
     } catch (error) {
-      Response.Validation(res, error);
+      return Response.Validation(res, error);
     }
   },
 };

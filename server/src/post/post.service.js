@@ -67,6 +67,20 @@ const PostService = {
     };
   },
 
+  /* @Get Ono Post(with. User) Service */
+  getPostExistance: async (post_id) => {
+    return await Post.findOne({
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['user_id', 'email', 'nickname'],
+        },
+      ],
+      where: { post_id },
+    });
+  },
+
   /* @Create Post Service */
   createPost: async (postDto) => {
     await Post.create(postDto);
