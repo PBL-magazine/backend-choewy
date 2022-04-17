@@ -33,16 +33,20 @@ const UserError = {
   },
   NicknameInPassword: () => {
     throw {
-      details: {
-        message: '비밀번호에 닉네임이 포함되어 있습니다.',
-      },
+      details: [
+        {
+          message: '비밀번호에 닉네임이 포함되어 있습니다.',
+        },
+      ],
     };
   },
   InvalidPassword: () => {
     throw {
-      details: {
-        message: '비밀번호가 일치하지 않습니다.',
-      },
+      details: [
+        {
+          message: '비밀번호가 일치하지 않습니다.',
+        },
+      ],
     };
   },
 };

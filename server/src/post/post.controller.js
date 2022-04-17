@@ -39,6 +39,7 @@ const PostController = () => {
     '/',
     UserPipes.Authorization,
     Upload.single('image'),
+    PostValidation.Image,
     PostValidation.Content,
     async (req, res) => {
       try {

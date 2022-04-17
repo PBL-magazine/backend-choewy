@@ -21,7 +21,7 @@ const Response = {
   },
   Validation: (res, error) => {
     const { details } = error;
-    const data = { message: details.message };
+    const data = { message: details[0].message };
     return res.status(400).send(defaults.error(data));
   },
 };
