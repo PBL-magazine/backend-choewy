@@ -19,8 +19,8 @@ const LikeController = () => {
       try {
         const { user_id } = req.user;
         const { post_id } = req.params;
-        const like = await LikeService.changeLike(user_id, post_id);
-        Response.Success.Ok(res, { like });
+        await LikeService.changeLike(user_id, post_id);
+        Response.Success.Ok(res);
       } catch (error) {
         Response.Fails(res, error);
       }
