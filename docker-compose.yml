@@ -29,7 +29,7 @@ services:
     volumes:
       - ./server/upload:/server/upload
     ports:
-      - 5000:5000
+      - 80:5000
     networks:
       magazine:
         ipv4_address: 172.20.0.4
