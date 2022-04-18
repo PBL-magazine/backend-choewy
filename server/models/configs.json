@@ -1,9 +1,9 @@
 {
   "development": {
     "username": "root",
-    "password": "root",
+    "password": "password",
     "database": "magazine_development",
-    "host": "127.0.0.1",
+    "host": "172.27.0.2",
     "port": 5002,
     "dialect": "mysql"
   },
