@@ -11,6 +11,7 @@ const CommentController = () => {
   const prefix = '/api/posts/:post_id/comments';
   const router = Router({ mergeParams: true });
 
+  /* 특정 게시물의 모든 댓글을 조회합니다. */
   router.get('/', PostPipes.Existence, async (req, res) => {
     try {
       const { post_id } = req.params;
@@ -38,6 +39,7 @@ const CommentController = () => {
     },
   );
 
+  /* 특정 게시물의 기존 댓글을 수정합니다. */
   router.patch(
     '/:comment_id',
     UserPipes.Authorization,
@@ -67,6 +69,7 @@ const CommentController = () => {
     },
   );
 
+  /* 특정 게시물의 기존 댓글을 삭제합니다. */
   router.delete(
     '/:comment_id',
     UserPipes.Authorization,

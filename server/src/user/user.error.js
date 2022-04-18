@@ -1,5 +1,6 @@
 'use strict';
 
+/* 사용자 API 관련 예외 처리입니다. */
 const UserError = {
   NotFoundEmail: () => {
     throw {

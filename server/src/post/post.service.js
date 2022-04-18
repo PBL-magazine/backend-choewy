@@ -3,11 +3,14 @@
 const { Post, User, Like } = require('../../models');
 
 const PostService = {
-  /* @Get All Posts(with. User, Likes) Service */
+  /* 모든 게시물 정보, 작성자, 좋아요 정보를 조회합니다. */
   getPosts: async () => {
     const postsAll = await Post.findAll({
+      nest: true,
+      raw: true,
       include: [
         {
+          nest: true,
           raw: true,
           model: User,
           as: 'user',
@@ -16,33 +19,20 @@ const PostService = {
       ],
     });
 
-    const likesAll = await Like.findAll();
+    const likesAll = await Like.findAll({
+      nest: true,
+      raw: true,
+    });
 
-    /* 사용자 정보까지 조회하려면 아래 옵션 추가 */
-    /*
-    {
-      include: [
-        {
-          model: User,
-          as: 'user',
-          attributes: ['user_id', 'email', 'nickname'],
-        },
-      ],
-    }
-    */
-
-    const postValues = postsAll.map((el) => el.get({ plain: true }));
-    const likesValues = likesAll.map((el) => el.get({ plain: true }));
-
-    return postValues.map((post) => {
-      const likes = likesValues
+    return postsAll.map((post) => {
+      const likes = likesAll
         .filter((like) => like.post_id === post.post_id)
         .map((like) => ({ user_id: like.user_id }));
       return { ...post, likes };
     });
   },
 
-  /* @Get One Post(with. User, Likes) Service */
+  /* 특정 게시물 정보, 작성자, 좋아요 정보를 조회합니다. */
   getPost: async (post_id) => {
     const postOne = await Post.findOne({
       include: [
@@ -56,6 +46,8 @@ const PostService = {
     });
 
     const likesAll = await Like.findAll({
+      raw: true,
+      nest: true,
       include: [
         {
           model: User,
@@ -66,20 +58,9 @@ const PostService = {
       where: { post_id },
     });
 
-    /* 사용자 정보까지 조회하려면 */
-    /* 1. 아래 옵션 추가 */
-    /*
-    {
-      attributes: ['user_id', 'email', 'nickname'],
-    }
-    */
-
-    /* 2. map((like) => ... ) 부분 삭제*/
-    const likes = likesAll
-      .map((el) => el.get({ plain: true }))
-      .map((like) => ({
-        user_id: like.user_id,
-      }));
+    const likes = likesAll.map((like) => ({
+      user_id: like.user_id,
+    }));
 
     return {
       ...postOne.dataValues,
@@ -87,7 +68,7 @@ const PostService = {
     };
   },
 
-  /* @Get Ono Post(with. User) Service */
+  /* 현재 게시물의 존재여부 및 작성자 판단을 위한 함수입니다. */
   getPostExistance: async (post_id) => {
     return await Post.findOne({
       include: [
@@ -101,29 +82,29 @@ const PostService = {
     });
   },
 
-  /* @Create Post Service */
+  /* 새로운 게시물을 발행합니다. */
   createPost: async (postDto) => {
     await Post.create(postDto);
   },
 
-  /* @Update Post Service */
+  /* 특정 게시물을 수정합니다. */
   updatePost: async (post_id, user_id, postDto) => {
     await Post.update(postDto, { where: { post_id, user_id } });
   },
 
-  /* @Update Post Admin Service */
-  updateAdminPost: async (post_id, postDto) => {
-    await Post.update(postDto, { where: { post_id } });
-  },
-
-  /* @Delete Post Service */
+  /* 특정 게시물을 삭제합니다. */
   deletePost: async (post_id, user_id) => {
     await Post.destroy({
       where: { post_id, user_id },
     });
   },
 
-  /* @Delete Post Admin Service */
+  /* 관리자 권한으로 특정 게시물을 수정합니다. */
+  updateAdminPost: async (post_id, postDto) => {
+    await Post.update(postDto, { where: { post_id } });
+  },
+
+  /* 관리자 권한으로 특정 게시물을 삭제합니다. */
   deleteAdminPost: async (post_id) => {
     await Post.destroy({
       where: { post_id },

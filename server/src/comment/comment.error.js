@@ -1,5 +1,6 @@
 'use strict';
 
+/* 댓글 API 관련 예외 처리입니다. */
 const CommentError = {
   NotContent: () => {
     throw {

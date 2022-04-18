@@ -3,7 +3,7 @@
 const { Comment, User } = require('../../models');
 
 const CommentService = {
-  /* @Get Post's All Comments Service */
+  /* 특정 게시물의 모든 댓글 내용을 조회합니다. */
   getComments: async (post_id) => {
     return await Comment.findAll({
       where: { post_id },
@@ -17,7 +17,7 @@ const CommentService = {
     });
   },
 
-  /* @Get Post's One Comment Service */
+  /* 특정 게시물의 특정 댓글 내용을 조회합니다. */
   getComment: async (post_id, comment_id) => {
     return await Comment.findOne({
       where: { post_id, comment_id },
@@ -31,7 +31,7 @@ const CommentService = {
     });
   },
 
-  /* @Create Post's Comment Service */
+  /* 특정 게시물에 새로운 댓글을 추가합니다. */
   createComment: async (user_id, post_id, commentDto) => {
     await Comment.create({
       ...commentDto,
@@ -40,7 +40,7 @@ const CommentService = {
     });
   },
 
-  /* @Update Post's Comment Service */
+  /* 특정 게시물의 기존 댓글을 수정합니다. */
   updateComment: async (user_id, post_id, comment_id, commentDto) => {
     await Comment.update(commentDto, {
       where: {
@@ -51,17 +51,7 @@ const CommentService = {
     });
   },
 
-  /* @Update Post's Comment Admin Service */
-  updateAdminComment: async (post_id, comment_id, commentDto) => {
-    await Comment.update(commentDto, {
-      where: {
-        post_id,
-        comment_id,
-      },
-    });
-  },
-
-  /* @Delete Post's Comment Service */
+  /* 특정 게시물의 기존 댓글을 삭제합니다. */
   deleteComment: async (user_id, post_id, comment_id) => {
     await Comment.destroy({
       where: {
@@ -72,7 +62,17 @@ const CommentService = {
     });
   },
 
-  /* @Delete Post's Comment Admin Service */
+  /* 관리자 권한으로 특정 게시물의 기존 댓글을 수정합니다. */
+  updateAdminComment: async (post_id, comment_id, commentDto) => {
+    await Comment.update(commentDto, {
+      where: {
+        post_id,
+        comment_id,
+      },
+    });
+  },
+
+  /* 관리자 권한으로 특정 게시물의 기존 댓글을 삭제합니다. */
   deleteAdminComment: async (post_id, comment_id) => {
     await Comment.destroy({
       where: {

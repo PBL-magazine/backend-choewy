@@ -38,7 +38,7 @@ const Validation = {
 };
 
 const UserValidation = {
-  /* @Email Validation */
+  /* 이메일의 적합성을 검사합니다. */
   Email: async (req, res, next) => {
     try {
       const { email } = req.body;
@@ -49,7 +49,7 @@ const UserValidation = {
     }
   },
 
-  /* @Nickname Validation */
+  /* 닉네임의 적합성을 검사합니다. */
   Nickname: async (req, res, next) => {
     try {
       const { nickname } = req.body;
@@ -60,7 +60,7 @@ const UserValidation = {
     }
   },
 
-  /* @Password Validation */
+  /* 비밀번호의 적합성을 검사합니다. */
   Password: async (req, res, next) => {
     try {
       const { nickname, password } = req.body;
@@ -73,12 +73,12 @@ const UserValidation = {
     }
   },
 
-  /* @Password Validation */
+  /* 비밀번호 확인란의 적합성을 검사합니다. */
   confirmPassword: async (req, res, next) => {
     try {
       const { password, confirmPassword } = req.body;
       await Validation.confirmPassword.validateAsync(confirmPassword);
-      const isCorrect = password !== confirmPassword;
+      const isCorrect = password === confirmPassword;
       !isCorrect && UserError.InvalidPassword();
       next();
     } catch (error) {

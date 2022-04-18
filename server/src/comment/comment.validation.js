@@ -4,7 +4,7 @@ const Response = require('../../commons/response');
 const CommentError = require('./comment.error');
 
 const CommentValidation = {
-  /* @Comment Content Validation */
+  /* 댓글 내용의 적합성을 검사합니다. */
   Content: (req, res, next) => {
     try {
       !req.body.content && CommentError.NotContent();

@@ -5,7 +5,7 @@ const CommentService = require('./comment.service');
 const CommentError = require('./comment.error');
 
 const CommentPipes = {
-  /* @Comment Update or Delete Authorization Check Pipe */
+  /* 특정 댓글의 존재 여부 및 수정, 삭제 권한을 확인합니다. */
   Authorization: async (req, res, next) => {
     const { user_id, role } = req.user;
     const post_id = Number(req.params.post_id);
@@ -38,7 +38,7 @@ const CommentPipes = {
     next();
   },
 
-  /* @Comment Existence Check Pipe */
+  /* 특정 댓글의 존재 여부만을 확인합니다. */
   Existence: async (req, res, next) => {
     const post_id = Number(req.params.post_id);
     const comment_id = Number(req.params.comment_id);

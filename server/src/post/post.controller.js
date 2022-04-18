@@ -1,6 +1,7 @@
 'use strict';
 
 const { Router } = require('express');
+
 const multer = require('multer');
 const Upload = multer({ dest: './upload' });
 const UserPipes = require('../user/user.pipes');
@@ -13,7 +14,7 @@ const PostController = () => {
   const prefix = '/api/posts';
   const router = Router();
 
-  /* @Get All Posts Controller */
+  /* 모든 게시물을 조회합니다. */
   router.get('/', async (_, res) => {
     try {
       const rows = await PostService.getPosts();
@@ -23,7 +24,7 @@ const PostController = () => {
     }
   });
 
-  /* @Get One Post Controller */
+  /* 특정 게시물을 조회합니다. */
   router.get('/:post_id', PostPipes.Existence, async (req, res) => {
     try {
       const { post_id } = req.params;
@@ -34,7 +35,7 @@ const PostController = () => {
     }
   });
 
-  /* @Create Post Controller */
+  /* 새로운 게시물을 발행합니다. */
   router.post(
     '/',
     UserPipes.Authorization,
@@ -59,7 +60,7 @@ const PostController = () => {
     },
   );
 
-  /* @Update Post Controller */
+  /* 특정 게시물을 수정합니다. */
   router.patch(
     '/:post_id',
     UserPipes.Authorization,
@@ -81,7 +82,7 @@ const PostController = () => {
     },
   );
 
-  /* @Delete Post Controller */
+  /* 특정 게시물을 삭제합니다. */
   router.delete(
     '/:post_id',
     UserPipes.Authorization,

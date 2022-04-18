@@ -4,7 +4,7 @@ const Response = require('../../commons/response');
 const PostError = require('./post.error');
 
 const PostValidation = {
-  /* @Content Validation */
+  /* 게시물 내용의 적합성을 검사합니다. */
   Content: (req, res, next) => {
     try {
       !req.body.content && PostError.NotContent();
@@ -14,7 +14,7 @@ const PostValidation = {
     next();
   },
 
-  /* @Image Validation */
+  /* 게시물 이미지의 적합성을 검사합니다. */
   Image: (req, res, next) => {
     try {
       !req.file && PostError.NotImage();

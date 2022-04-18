@@ -5,14 +5,14 @@ require('dotenv').config();
 const express = require('express');
 const db = require('./models');
 
-// @App Middlewares
+/* 서버 앱에 필요한 미들웨어 입니다. */
 const Middlewares = [
   express.json(),
   express.urlencoded({ extended: true }),
   require('cors')(),
 ];
 
-// @App Controllers
+/* 서버 앱에 필요한 컨트롤러 입니다. */
 const Controllers = [
   require('./src/user/user.controller'),
   require('./src/post/post.controller'),
@@ -20,8 +20,9 @@ const Controllers = [
   require('./src/comment/comment.controller'),
 ];
 
-// @App Module
+/* 서버 앱 클래스 입니다. */
 class App {
+  /* 생성자를 통해 서버 앱이 실행되도록 하였습니다. */
   constructor() {
     this.app = express();
     this.setMiddlewares();
@@ -29,6 +30,7 @@ class App {
     this.listen();
   }
 
+  /* 미들웨어를 등록합니다. */
   setMiddlewares() {
     this.app.use('/image', express.static('./upload'));
     this.app.use('/', express.static(__dirname + '/views'));
@@ -37,15 +39,18 @@ class App {
     });
   }
 
+  /* 컨트롤러를 미들웨어로 등록합니다. */
   setControllers() {
     Controllers.forEach((Controller) => {
       this.app.use(...Controller());
     });
+
     this.app.use('*', (_, res) => {
       res.sendFile(__dirname + '/views/index.html');
     });
   }
 
+  /* Sequelize와 서버를 실행합니다. */
   listen() {
     db.sequelize
       .sync()
@@ -60,5 +65,5 @@ class App {
   }
 }
 
-// @App Run
+/* 서버 애플리케이션을 실행시킵니다. */
 new App();

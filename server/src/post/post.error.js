@@ -1,5 +1,6 @@
 'use strict';
 
+/* 게시물 API 관련 예외 처리입니다. */
 const PostError = {
   NotContent: () => {
     throw {

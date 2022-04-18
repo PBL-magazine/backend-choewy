@@ -12,7 +12,7 @@ const UserController = () => {
   const prefix = '/api/users';
   const router = Router();
 
-  /* @User Signup Controller */
+  /* 사용자 회원가입을 진행합니다. */
   router.post(
     '/signup',
     UserValidation.Email,
@@ -30,7 +30,7 @@ const UserController = () => {
     },
   );
 
-  /* @User Signin Controller */
+  /* 사용자 인증을 수행합니다. */
   router.post(
     '/signin',
     UserValidation.Email,
@@ -47,7 +47,7 @@ const UserController = () => {
     },
   );
 
-  /* @User Authorization Controller */
+  /* 사용자의 인가 상태를 판단합니다. */
   router.get('/auth', UserPipes.Authorization, (req, res) => {
     try {
       const user = {
@@ -62,7 +62,7 @@ const UserController = () => {
     }
   });
 
-  /* @User Signout */
+  /* 로그아웃을 합니다. */
   router.delete('/signout', (_, res) => {
     res.cookie('token', undefined);
     Response.Success.Ok(res);
