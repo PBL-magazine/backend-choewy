@@ -55,21 +55,35 @@ const PostService = {
       where: { post_id },
     });
 
-    const likesDetail = await Like.findAll({
+    const likesAll = await Like.findAll({
       include: [
         {
           model: User,
           as: 'user',
-          attributes: ['user_id', 'email', 'nickname'],
+          attributes: ['user_id'],
         },
       ],
       where: { post_id },
     });
 
+    /* 사용자 정보까지 조회하려면 */
+    /* 1. 아래 옵션 추가 */
+    /*
+    {
+      attributes: ['user_id', 'email', 'nickname'],
+    }
+    */
+
+    /* 2. map((like) => ... ) 부분 삭제*/
+    const likes = likesAll
+      .map((el) => el.get({ plain: true }))
+      .map((like) => ({
+        user_id: like.user_id,
+      }));
+
     return {
       ...postOne.dataValues,
-      likesDetail,
-      likes: likesDetail.length,
+      likes,
     };
   },
 
