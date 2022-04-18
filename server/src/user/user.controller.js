@@ -54,9 +54,8 @@ const UserController = () => {
         user_id: req.user.user_id,
         email: req.user.email,
         nickname: req.user.nickname,
-        createdAt: req.user.createdAt,
+        role: req.user.role,
       };
-      res.cookie('token', req.token);
       Response.Success.Created(res, { user });
     } catch (error) {
       Response.Fails(res, error);

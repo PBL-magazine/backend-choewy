@@ -24,7 +24,6 @@ const UserPipes = {
     try {
       const user = await UserService.findUserByPayload(payload);
       req.user = user;
-      req.token = authorization.split(' ')[1];
       next();
     } catch (error) {
       return Response.Fails(res, error);
