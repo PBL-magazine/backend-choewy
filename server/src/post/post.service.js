@@ -8,6 +8,7 @@ const PostService = {
     const postsAll = await Post.findAll({
       include: [
         {
+          raw: true,
           model: User,
           as: 'user',
           attributes: ['user_id', 'email', 'nickname'],
@@ -15,7 +16,11 @@ const PostService = {
       ],
     });
 
-    const likesAll = await Like.findAll({
+    const likesAll = await Like.findAll();
+
+    /* 사용자 정보까지 조회하려면 아래 옵션 추가 */
+    /*
+    {
       include: [
         {
           model: User,
@@ -23,16 +28,17 @@ const PostService = {
           attributes: ['user_id', 'email', 'nickname'],
         },
       ],
-    });
+    }
+    */
 
     const postValues = postsAll.map((el) => el.get({ plain: true }));
     const likesValues = likesAll.map((el) => el.get({ plain: true }));
 
     return postValues.map((post) => {
-      const likesDetail = likesValues.filter(
-        (like) => like.post_id === post.post_id,
-      );
-      return { ...post, likesDetail, likes: likesDetail.length };
+      const likes = likesValues
+        .filter((like) => like.post_id === post.post_id)
+        .map((like) => ({ user_id: like.user_id }));
+      return { ...post, likes };
     });
   },
 
