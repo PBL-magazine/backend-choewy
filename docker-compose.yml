@@ -23,6 +23,8 @@ services:
       - mysql
     build: ./server/
     restart: always
+    volumes:
+      - ./upload:../upload
     ports:
       - 80:5000
     networks:
