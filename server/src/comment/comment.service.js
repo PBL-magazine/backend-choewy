@@ -51,11 +51,31 @@ const CommentService = {
     });
   },
 
+  /* @Update Post's Comment Admin Service */
+  updateAdminComment: async (post_id, comment_id, commentDto) => {
+    await Comment.update(commentDto, {
+      where: {
+        post_id,
+        comment_id,
+      },
+    });
+  },
+
   /* @Delete Post's Comment Service */
   deleteComment: async (user_id, post_id, comment_id) => {
     await Comment.destroy({
       where: {
         user_id,
+        post_id,
+        comment_id,
+      },
+    });
+  },
+
+  /* @Delete Post's Comment Admin Service */
+  deleteAdminComment: async (post_id, comment_id) => {
+    await Comment.destroy({
+      where: {
         post_id,
         comment_id,
       },

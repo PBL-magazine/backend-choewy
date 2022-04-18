@@ -67,11 +67,13 @@ const PostController = () => {
     PostValidation.Content,
     async (req, res) => {
       try {
-        const { user_id } = req.user;
+        const { user_id, role } = req.user;
         const { post_id } = req.params;
         const { content } = req.body;
         const postDto = { content };
-        await PostService.updatePost(post_id, user_id, postDto);
+        role === 1
+          ? await PostService.updateAdminPost(post_id, postDto)
+          : await PostService.updatePost(post_id, user_id, postDto);
         Response.Success.Ok(res);
       } catch (error) {
         Response.Fails(res, error);
@@ -86,9 +88,11 @@ const PostController = () => {
     PostPipes.Authorization,
     async (req, res) => {
       try {
-        const { user_id } = req.user;
+        const { user_id, role } = req.user;
         const { post_id } = req.params;
-        await PostService.deletePost(post_id, user_id);
+        role === 1
+          ? await PostService.deleteAdminPost(post_id)
+          : await PostService.deletePost(post_id, user_id);
         Response.Success.Ok(res);
       } catch (error) {
         Response.Fails(res, error);

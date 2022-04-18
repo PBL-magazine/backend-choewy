@@ -7,7 +7,7 @@ const PostError = require('./post.error');
 const PostPipes = {
   /* @Post Update or Delete Authorization Check Pipe */
   Authorization: async (req, res, next) => {
-    const { user_id } = req.user;
+    const { user_id, role } = req.user;
     const post_id = Number(req.params.post_id);
 
     let post;
@@ -20,8 +20,10 @@ const PostPipes = {
     }
 
     try {
+      const isAdmin = role === 1;
       const isOwner = post.user_id === user_id;
-      !isOwner && PostError.Unauthorized();
+      const isAuth = isAdmin || isOwner;
+      !isAuth && PostError.Unauthorized();
     } catch (error) {
       return Response.Fails(res, error);
     }

@@ -7,7 +7,7 @@ const CommentError = require('./comment.error');
 const CommentPipes = {
   /* @Comment Update or Delete Authorization Check Pipe */
   Authorization: async (req, res, next) => {
-    const { user_id } = req.user;
+    const { user_id, role } = req.user;
     const post_id = Number(req.params.post_id);
     const comment_id = Number(req.params.comment_id);
 
@@ -21,8 +21,10 @@ const CommentPipes = {
     }
 
     try {
+      const isAdmin = role === 1;
       const isOwner = comment.user_id === user_id;
-      !isOwner && CommentError.Unauthorized();
+      const isAuth = isAdmin || isOwner;
+      !isAuth && CommentError.Unauthorized();
     } catch (error) {
       return Response.Fails(res, error);
     }

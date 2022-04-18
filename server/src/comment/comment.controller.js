@@ -45,15 +45,21 @@ const CommentController = () => {
     CommentPipes.Authorization,
     async (req, res) => {
       try {
-        const { user_id } = req.user;
+        const { user_id, role } = req.user;
         const { post_id, comment_id } = req.params;
         const commentDto = req.body;
-        await CommentService.updateComment(
-          user_id,
-          post_id,
-          comment_id,
-          commentDto,
-        );
+        role === 1
+          ? await CommentService.updateAdminComment(
+              post_id,
+              comment_id,
+              commentDto,
+            )
+          : await CommentService.updateComment(
+              user_id,
+              post_id,
+              comment_id,
+              commentDto,
+            );
         Response.Success.Ok(res);
       } catch (error) {
         Response.Fails(res, error);
@@ -68,9 +74,11 @@ const CommentController = () => {
     CommentPipes.Authorization,
     async (req, res) => {
       try {
-        const { user_id } = req.user;
+        const { user_id, role } = req.user;
         const { post_id, comment_id } = req.params;
-        await CommentService.deleteComment(user_id, post_id, comment_id);
+        role === 1
+          ? await CommentService.deleteAdminComment(post_id, comment_id)
+          : await CommentService.deleteComment(user_id, post_id, comment_id);
         Response.Success.Ok(res);
       } catch (error) {
         Response.Fails(res, error);

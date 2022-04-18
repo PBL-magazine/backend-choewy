@@ -111,10 +111,22 @@ const PostService = {
     await Post.update(postDto, { where: { post_id, user_id } });
   },
 
+  /* @Update Post Admin Service */
+  updateAdminPost: async (post_id, postDto) => {
+    await Post.update(postDto, { where: { post_id } });
+  },
+
   /* @Delete Post Service */
   deletePost: async (post_id, user_id) => {
     await Post.destroy({
       where: { post_id, user_id },
+    });
+  },
+
+  /* @Delete Post Admin Service */
+  deleteAdminPost: async (post_id) => {
+    await Post.destroy({
+      where: { post_id },
     });
   },
 };
