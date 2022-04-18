@@ -1,6 +1,5 @@
 version: '3.7'
 
-
 services:
   mysql:
     build: ./mysql/
@@ -12,26 +11,31 @@ services:
       - ./mysql/data:/var/lib/mysql
       - ./mysql/sqls:/docker-entrypoint-initdb.d
     ports:
-      - 5002:3306
+      - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: password
     networks:
-      - magazine
+      magazine:
+        ipv4_address: 172.20.0.3
 
   server:
     depends_on:
       - mysql
     build: ./server/
     restart: always
+    environment:
+      - NODE_ENV=production
+      - DB_HOST=172.20.0.3
     volumes:
-      - ./upload:../upload
+      - ./server/upload:/server/upload
     ports:
-      - 80:5000
+      - 5000:5000
     networks:
-      - magazine
+      magazine:
+        ipv4_address: 172.20.0.4
 
-
-# TODO : sudo docker network create --driver=bridge magazine
+# TODO : sudo docker network create --gateway 172.20.0.1 --subnet 172.20.0.0/16 --driver=bridge magazine
 networks:
   magazine:
-    driver: bridge
+    internal: true
+    external: true
