@@ -30,7 +30,8 @@ class App {
   }
 
   setMiddlewares() {
-    this.app.use('/image', express.static('../upload'));
+    this.app.use('/image', express.static('./upload'));
+    this.app.use('/', express.static(__dirname + '/views'));
     Middlewares.forEach((Middleware) => {
       this.app.use(Middleware);
     });
@@ -39,6 +40,9 @@ class App {
   setControllers() {
     Controllers.forEach((Controller) => {
       this.app.use(...Controller());
+    });
+    this.app.use('*', (_, res) => {
+      res.sendFile(__dirname + '/views/index.html');
     });
   }
 

@@ -2,7 +2,7 @@
 
 const { Router } = require('express');
 const multer = require('multer');
-const Upload = multer({ dest: '../upload' });
+const Upload = multer({ dest: './upload' });
 const UserPipes = require('../user/user.pipes');
 const PostValidation = require('./post.validation');
 const PostService = require('./post.service');
